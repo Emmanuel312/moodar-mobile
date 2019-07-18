@@ -10,7 +10,8 @@ export default class Login extends Component
         email: 'efn@cin.ufpe.br',
         password: '123456'
     }
-    
+  
+
     async componentDidMount()
     {
         const login = await AsyncStorage.getItem('@login')
