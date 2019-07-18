@@ -1,7 +1,7 @@
 import { Container,Content,Input,Header,LoginButton,TextButton,Image,SwitchView,TextSwitch } from '../authStyles/styles'
 import React, { Component } from 'react'
 import api from '../../services/api'
-
+import AsyncStorage from '@react-native-community/async-storage'
 
 export default class Register extends Component
 {
@@ -16,14 +16,14 @@ export default class Register extends Component
     {
         try
         {
-            const { email, password } =  this.state
+            const { email, password,name } =  this.state
             const { data: user } = await api.post('signup', { email,password,name })
             await AsyncStorage.setItem('@login', user.token)
             this.props.navigation.navigate('Main', {token: user.token })
         }
         catch(error)
         {
-            console.log(error.request)
+            console.log(error)
         }
 
     }
