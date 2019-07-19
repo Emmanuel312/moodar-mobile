@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import AsyncStorage from '@react-native-community/async-storage'
 import { Container,Slider,LevelStressView,TextLevel,FlatListDate,Footer,DateView,DateText,Header,Title} from './styles'
 import api from '../../services/api'
+import Create from '../../components/create'
+import Update from '../../components/update'
 
 export default class Main extends Component
 {
@@ -12,7 +14,9 @@ export default class Main extends Component
         stress : [],
         level: 0,
         days: [],
-        visible: false,
+        exist: false,
+        day: '',
+        visible: false
     }
 
     
@@ -54,12 +58,16 @@ export default class Main extends Component
         }
         
     }
-
+    handleCheck = (item) =>
+    {
+        this.setState({ day: item,visible: true })
+        this.state.stress.filter(stress => stress.date === item).length ? this.setState({ exist:true}) : this.setState({ exist:false})
+    }
     
 
     renderItem = ({ item }) =>
     (
-        <DateView onPress={() => this.handleCreateStress(item)}>
+        <DateView onPress={() => this.handleCheck(item)}>
             <DateText>{item}</DateText>
         </DateView>
     )
@@ -95,17 +103,17 @@ export default class Main extends Component
                 </Header>
 
                 <Footer>
-                    {this.state.visible && (
-                        <>
-                            <LevelStressView>
-                            <Slider value={this.state.level} onValueChange={level => this.setState({ level})} />
-                            <TextLevel level={this.state.level}>{this.state.level}</TextLevel>
-                            <Text>{this.state.current.context}</Text>
-                        </LevelStressView>
-                        </>
-                    )
+                    {this.state.visible && (this.state.exist? <Update onCancel={() => } data={this.state.day} /> : <Create data={this.state.day}/>)}
+                    
+                    {/* <LevelStressView>
+                        <Slider value={this.state.level} onValueChange={level => this.setState({ level})} />
+                        <TextLevel level={this.state.level}>{this.state.level}</TextLevel>
+                        <Text>{this.state.current.context}</Text>
+                    </LevelStressView>
+                    
+                 */}
                      
-                    }
+            
                    
                 </Footer>
             </Container>
