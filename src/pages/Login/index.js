@@ -7,7 +7,7 @@ export default class Login extends Component
 {
     state = 
     {
-        email: 'efn@cin.ufpe.br',
+        email: 'efn15@cin.ufpe.br',
         password: '123456'
     }
   
