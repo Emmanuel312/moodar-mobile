@@ -16,7 +16,8 @@ export default class Main extends Component
         days: [],
         exist: false,
         day: '',
-        visible: false
+        visible: false,
+        current: {}
     }
 
     
@@ -58,11 +59,15 @@ export default class Main extends Component
         }
         
     }
+
     handleCheck = (item) =>
     {
         this.setState({ day: item,visible: true })
-        this.state.stress.filter(stress => stress.date === item).length ? this.setState({ exist:true}) : this.setState({ exist:false})
+        const current = this.state.stress.filter(stress => stress.date === item)
+        
+        current.length ? this.setState({ exist:true,current:current[0] }) : this.setState({ exist:false})
     }
+    
     
 
     renderItem = ({ item }) =>
@@ -103,7 +108,7 @@ export default class Main extends Component
                 </Header>
 
                 <Footer>
-                    {this.state.visible && (this.state.exist? <Update onCancel={() => } data={this.state.day} /> : <Create data={this.state.day}/>)}
+                    {this.state.visible && (this.state.exist? <Update onClose={() => this.setState({visible: false})} data={this.state.current} /> : <Create onClose={() => this.setState({visible: false})} data={this.state.day}/>)}
                     
                     {/* <LevelStressView>
                         <Slider value={this.state.level} onValueChange={level => this.setState({ level})} />
