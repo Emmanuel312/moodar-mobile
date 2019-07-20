@@ -1,7 +1,7 @@
 import { View,Text,FlatList } from 'react-native'
 import React, { Component } from 'react'
 import AsyncStorage from '@react-native-community/async-storage'
-import { Container,Slider,LevelStressView,TextLevel,FlatListDate,Footer,DateView,DateText,Header,Title} from './styles'
+import { Container,FlatListDate,Footer,DateView,DateText,Header,Title} from './styles'
 import api from '../../services/api'
 import Create from '../../components/create'
 import Update from '../../components/update'
@@ -12,7 +12,6 @@ export default class Main extends Component
     state =
     {
         stress : [],
-        level: 0,
         days: [],
         exist: false,
         day: '',
@@ -38,27 +37,7 @@ export default class Main extends Component
     }
 
 
-    handleCreateStress = async (date) =>
-    {
-        const data =
-        {
-            level: 1,
-            context: 'teste',
-            date
-        }
-        try
-        {   
-            const token = await AsyncStorage.getItem('@login')
-            const { data: stress} = await api.post('stress/create',data, {headers: { 'authorization': `Bearer ${token}` }})
-            console.log(stress)
-            this.setState({...stress })
-        }
-        catch(err)
-        {
-            console.log(err)
-        }
-        
-    }
+   
 
     handleCheck = (item) =>
     {
@@ -108,18 +87,8 @@ export default class Main extends Component
                 </Header>
 
                 <Footer>
-                    {this.state.visible && (this.state.exist? <Update onClose={() => this.setState({visible: false})} data={this.state.current} /> : <Create onClose={() => this.setState({visible: false})} data={this.state.day}/>)}
+                    {this.state.visible && (this.state.exist? <Update onClose={() => this.setState({visible: false})} data={this.state.current} /> : <Create onClose={() => this.setState({visible: false})} date={this.state.day}/>)}
                     
-                    {/* <LevelStressView>
-                        <Slider value={this.state.level} onValueChange={level => this.setState({ level})} />
-                        <TextLevel level={this.state.level}>{this.state.level}</TextLevel>
-                        <Text>{this.state.current.context}</Text>
-                    </LevelStressView>
-                    
-                 */}
-                     
-            
-                   
                 </Footer>
             </Container>
         )
