@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 
 const api = axios.create(
 {
-    baseURL: 'https://moodar-backend.herokuapp.com',
+    baseURL: 'http://10.0.0.105:3000'
 })
 
 

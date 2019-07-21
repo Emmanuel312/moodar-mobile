@@ -1,10 +1,11 @@
-import { View,Text,FlatList } from 'react-native'
+import { FlatList,ActivityIndicator } from 'react-native'
 import React, { Component } from 'react'
 import AsyncStorage from '@react-native-community/async-storage'
 import { Container,FlatListDate,Footer,DateView,DateText,Header,Title} from './styles'
 import api from '../../services/api'
 import Create from '../../components/create'
 import Update from '../../components/update'
+import SocketIO from 'socket.io-client'
 
 export default class Main extends Component
 {
@@ -16,7 +17,8 @@ export default class Main extends Component
         exist: false,
         day: '',
         visible: false,
-        current: {}
+        current: {},
+        loading: true
     }
 
     
@@ -24,11 +26,12 @@ export default class Main extends Component
     {   
         try
         {   
+            this.registerToSocket()
             this.getDays(7)
             const token = await AsyncStorage.getItem('@login')
             const { data: stress} = await api.get('stress/list', {headers: { 'authorization': `Bearer ${token}` }})
             console.log(stress)
-            this.setState({ stress })
+            this.setState({ stress }, this.setState({loading: false}))
         }
         catch(err)
         {
@@ -36,7 +39,32 @@ export default class Main extends Component
         }
     }
 
+    registerToSocket = () =>
+    {
+        
+        // const socket = io.connect('http://10.0.0.105:3000')
+        // socket.on('connect', data => console.log(data))
+        const socket =  SocketIO('http://10.0.0.105:3000',{ transports: ['websocket'], jsonp: false })
+        socket.connect()
+        socket.on('connect_error', data => console.log(data))
+        socket.on('connect', () => { 
+            console.log('connected to socket server'); 
+          }); 
+        socket.on('create', newStress =>
+        {
+            console.log(newStress)
+            this.setState({stress: [...this.state.stress,newStress]})
+        })
 
+        socket.on('update', newStress =>
+        {
+            console.log(newStress)
+            this.setState({stress: this.state.stress.map(item => item._id === newStress._id? newStress: item)})
+        })
+        
+       
+        
+    }
    
 
     handleCheck = (item) =>
@@ -48,10 +76,9 @@ export default class Main extends Component
     }
     
     
-
     renderItem = ({ item }) =>
     (
-        <DateView onPress={() => this.handleCheck(item)}>
+        <DateView disabled={this.state.loading} onPress={() => this.handleCheck(item)}>
             <DateText>{item}</DateText>
         </DateView>
     )
@@ -88,7 +115,7 @@ export default class Main extends Component
 
                 <Footer>
                     {this.state.visible && (this.state.exist? <Update onClose={() => this.setState({visible: false})} data={this.state.current} /> : <Create onClose={() => this.setState({visible: false})} date={this.state.day}/>)}
-                    
+                    {this.state.loading && <ActivityIndicator size="small" color="#CC0066" />}
                 </Footer>
             </Container>
         )
