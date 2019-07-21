@@ -5,7 +5,7 @@ import { Container,FlatListDate,Footer,DateView,DateText,Header,Title} from './s
 import api from '../../services/api'
 import Create from '../../components/create'
 import Update from '../../components/update'
-import SocketIO from 'socket.io-client'
+import io from 'socket.io-client'
 
 export default class Main extends Component
 {
@@ -42,11 +42,7 @@ export default class Main extends Component
     registerToSocket = () =>
     {
         
-        // const socket = io.connect('http://10.0.0.105:3000')
-        // socket.on('connect', data => console.log(data))
-        const socket =  SocketIO('http://10.0.0.105:3000',{ transports: ['websocket'], jsonp: false })
-        socket.connect()
-        socket.on('connect_error', data => console.log(data))
+        const socket =  io.connect('https://moodar-backend.herokuapp.com')
         socket.on('connect', () => { 
             console.log('connected to socket server'); 
           }); 
