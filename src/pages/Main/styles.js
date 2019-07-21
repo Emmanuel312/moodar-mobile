@@ -10,6 +10,8 @@ export const Header = styled.View`
     padding-vertical: 10px;
     align-items: center;
     justify-content: flex-end;
+    border-bottom-width: 1px;
+    border-bottom-color: #A6A6A6;
 `
 
 export const FlatListDate = styled.View`
@@ -17,8 +19,8 @@ export const FlatListDate = styled.View`
 `
 export const Footer = styled.View`
     flex:7;
-    padding-top: 100px;
-    background-color: gray;
+    padding-top: 50px;
+    align-items:center;
 `
 
 export const DateView = styled.TouchableOpacity`
@@ -41,4 +43,10 @@ export const Title = styled.Text`
     font-size: 20px;
     color: #CC0066;
     margin-bottom: 15px;
+`
+export const TextHistory = styled.Text`
+font-weight: bold;
+font-size: 10px;
+color: #A6A6A6;
+
 `

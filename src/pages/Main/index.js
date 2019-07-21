@@ -1,7 +1,7 @@
 import { FlatList,ActivityIndicator } from 'react-native'
 import React, { Component } from 'react'
 import AsyncStorage from '@react-native-community/async-storage'
-import { Container,FlatListDate,Footer,DateView,DateText,Header,Title} from './styles'
+import { Container,FlatListDate,Footer,DateView,DateText,Header,Title,TextHistory} from './styles'
 import api from '../../services/api'
 import Create from '../../components/create'
 import Update from '../../components/update'
@@ -110,6 +110,7 @@ export default class Main extends Component
                 </Header>
 
                 <Footer>
+                    <TextHistory>Clique aqui para ver o histórico mensal (em breve)</TextHistory>
                     {this.state.visible && (this.state.exist? <Update onClose={() => this.setState({visible: false})} data={this.state.current} /> : <Create onClose={() => this.setState({visible: false})} date={this.state.day}/>)}
                     {this.state.loading && <ActivityIndicator size="small" color="#CC0066" />}
                 </Footer>

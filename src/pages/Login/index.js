@@ -2,13 +2,15 @@ import { Container,Content,Input,Header,LoginButton,TextButton,Image,TextSwitch,
 import React, { Component } from 'react'
 import api from '../../services/api'
 import AsyncStorage from '@react-native-community/async-storage'
+import { ActivityIndicator } from 'react-native'
 
 export default class Login extends Component
 {
     state = 
     {
-        email: 'efn15@cin.ufpe.br',
-        password: '123456'
+        email: '',
+        password: '',
+        loading: false
     }
   
 
@@ -20,10 +22,12 @@ export default class Login extends Component
 
     handleLogin = async () =>
     {
+        this.setState({loading: true })
         try
         {
             const { email, password } =  this.state
             const { data: user } = await api.post('signin', {email,password})
+            this.setState({loading: false })
             await AsyncStorage.setItem('@login', user.token)
             this.props.navigation.navigate('Main', {token: user.token} )
         }
@@ -50,6 +54,7 @@ export default class Login extends Component
                     <SwitchView onPress={() => this.props.navigation.navigate('Register')}>
                         <TextSwitch>Não possui uma conta? Faça agora mesmo!</TextSwitch>
                     </SwitchView>
+                    {this.state.loading && <ActivityIndicator size="small" color="#CC0066" />}
                 </Content>
             </Container>
         )

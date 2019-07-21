@@ -2,6 +2,7 @@ import { Container,Content,Input,Header,LoginButton,TextButton,Image,SwitchView,
 import React, { Component } from 'react'
 import api from '../../services/api'
 import AsyncStorage from '@react-native-community/async-storage'
+import { ActivityIndicator } from 'react-native'
 
 export default class Register extends Component
 {
@@ -9,15 +10,18 @@ export default class Register extends Component
     {
         email: '',
         password: '',
-        name: ''
+        name: '',
+        loading: false
     }
 
     handleLogin = async () =>
     {
+        this.setState({loading: true })
         try
         {
             const { email, password,name } =  this.state
             const { data: user } = await api.post('signup', { email,password,name })
+            this.setState({loading: false })
             await AsyncStorage.setItem('@login', user.token)
             this.props.navigation.navigate('Main', {token: user.token })
         }
@@ -45,6 +49,7 @@ export default class Register extends Component
                     <SwitchView onPress={() => this.props.navigation.navigate('Login')}>
                         <TextSwitch>Já possui uma conta? Entre agora mesmo!</TextSwitch>
                     </SwitchView>
+                    {this.state.loading && <ActivityIndicator size="small" color="#CC0066" />}
                 </Content>
             </Container>
         )
